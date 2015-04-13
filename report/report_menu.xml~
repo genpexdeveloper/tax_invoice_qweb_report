@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <report id="tax_invoice_menu_id" string="Tax Invoice" model="account.invoice" 
+            report_type="qweb-pdf" name="tax_invoice_qweb_report.tax_invoice_report_template_id"
+            file="tax_invoice_qweb_report.tax_invoice_report_template_id" />
+        
+    </data>
+</openerp>

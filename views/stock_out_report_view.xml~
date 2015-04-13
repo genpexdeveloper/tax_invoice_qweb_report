@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="stock_out_report_template_id">
+			<t t-call="report.stock_custom_external_layout">
+				<div class="page">
+					<h3 style="border-bottom:2px solid black;">
+						<span><strong>Stock Out Report</strong></span>
+						<span style="color:white;">..............................</span>
+						<span style="font-size:15px;"><strong>Date:</strong></span>
+						<span t-esc="get_start_date(data['form']['start_date'])" style="font-size:14px;"/>
+						<span> </span>
+						<span style="font-size:14px;">To</span>
+						<span> </span>
+						<span t-esc="get_end_date(data['form']['end_date'])" style="font-size:14px;"/>
+					</h3>
+					<h4>Salesperson : <span t-esc="data['form']['user_id'][1]"/></h4>
+					<table class="table table-condensed" >
+						<thead style="border:1px solid black;">
+						    <tr>
+						        <th style="border:1px solid black;">Product</th>
+						        <th style="border:1px solid black;">Price</th>
+								<th style="border:1px solid black;">Quantity</th>
+						        <th style="border:1px solid black;">Amount</th>
+						        <th style="border:1px solid black;">Source</th>
+						        <th style="border:1px solid black;">Operation Date</th>
+						        <th style="border:1px solid black;">Company</th>
+						        <th style="border:1px solid black;">Status</th>
+						    </tr>
+						</thead>
+						<tbody class="invoice_tbody">
+					    	<tr t-foreach="get_stock_moves(data['form'])" t-as="o">
+							    <td style="border:1px solid black;"><span t-field="o.product_id.name"/></td>
+							    <td style="border:1px solid black;"><span t-field="o.product_id.lst_price"/></td>
+							    <td style="border:1px solid black;"><span t-field="o.product_uom_qty"/></td>
+							    <td style="border:1px solid black;"><span t-esc="get_amount(o.product_id.lst_price,o.product_uom_qty)"/></td>
+							    <td style="border:1px solid black;"><span t-field="o.origin"/></td>
+							    <td style="border:1px solid black;"><span t-esc="get_creation_date(o.create_date)"/></td>
+							    <td style="border:1px solid black;"><span t-field="o.company_id.name"/></td>
+							    <td style="border:1px solid black;"><span t-field="o.state"/></td>
+					        </tr>
+					        <tr>
+							    <td style="border:1px solid black;"><strong>Total</strong></td>
+							    <td style="border:1px solid black;"></td>
+							    <td style="border:1px solid black;"><strong><span t-esc="get_final_qty()"/></strong></td>
+							    <td style="border:1px solid black;"><strong><span t-esc="get_final_total()"/></strong></td>
+							    <td style="border:1px solid black;"></td>
+							    <td style="border:1px solid black;"></td>
+							    <td style="border:1px solid black;"></td>
+							    <td style="border:1px solid black;"></td>
+					        </tr>
+						</tbody>
+					</table>
+						<!--tbody class="invoice_tbody">
+					    	<tr t-foreach="get_invoice_ids(data['form'])" t-as="o">
+							    <td><span t-esc="get_index()"/></td>
+							    <td><span t-field="o.number"/></td>
+							    <td><span t-field="o.partner_id.name"/></td>
+							    <td style="text-align:right;"><span t-field="o.amount_total"/><span style="color:white;">....</span><span t-field="o.currency_id.symbol"/></td>
+							    <td></td>
+							    <td></td>
+					        </tr>
+						</tbody>
+					</table>
+					<table class="table table-condensed">
+						<tbody class="invoice_tbody">
+							<tr>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="25%"><strong>Total</strong></td>
+							    <td width="15%" style="text-align:right;"><span t-esc="get_grand_total1(data['form'])"/></td>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="15%" style="border:none;"></td>
+					        </tr>
+					        <tr>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="25%"><strong>Received Today</strong></td>
+							    <td width="15%" style="text-align:right;"></td>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="15%" style="border:none;"></td>
+					        </tr>
+					        <tr>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="25%"><strong>Remaining Total</strong></td>
+							    <td width="15%" style="text-align:right;"></td>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="15%" style="border:none;"></td>
+					        </tr>
+					        <tr>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="25%" stylr="color:red;"><strong >Signature</strong></td>
+							    <td width="15%" style="text-align:right;"></td>
+							    <td width="15%" style="border:none;"></td>
+							    <td width="15%" style="border:none;"></td>
+					        </tr>
+						</tbody>
+					</table-->
+				</div>
+			</t>
+		</template>
+	</data>
+</openerp>

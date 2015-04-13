@@ -1,0 +1,199 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2014-Today BrowseInfo (<http://www.browseinfo.in>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+import time
+from openerp.osv import osv
+from openerp.tools.translate import _
+from openerp.report import report_sxw
+from elaphe.upc import UpcA
+from datetime import datetime
+from openerp.modules.module import get_module_resource
+
+
+class stock_out_report(report_sxw.rml_parse):
+
+
+    def __init__(self, cr, uid, name, context=None):
+        super(stock_out_report, self).__init__(cr, uid, name, context=context)
+        self.init_bal_sum = 0.0
+        self.index = 0
+        self.total_amount = 0
+        self.total_qty = 0
+        self.grand_total =0
+        self.grand_total1 =0
+        self.localcontext.update({
+            'time': time,
+            'get_start_date':self.get_start_date,
+            'get_end_date':self.get_end_date,
+            'get_stock_moves':self.get_stock_moves,
+            'get_amount':self.get_amount,
+            'get_creation_date':self.get_creation_date,
+            'get_final_total':self.get_final_total,
+            'get_final_qty':self.get_final_qty,
+            'get_invoice_ids':self.get_invoice_ids,
+            'get_index':self.get_index,
+            'get_grand_total':self.get_grand_total,
+            'get_grand_total1':self.get_grand_total1,
+            })
+    def get_start_date(self,start_date):
+        start_date = str(start_date)
+        date = start_date.split(' ')
+        return date[0]
+
+    def get_end_date(self,end_date):
+        end_date = str(end_date)
+        date = end_date.split(' ')
+        return date[0]
+    
+    def get_stock_moves(self,data):
+        start_date = data['start_date']
+        end_date = data['end_date']
+        stock_move_pool = self.pool.get('stock.move')
+        sale_order_pool = self.pool.get('sale.order')
+        print "\n\n==================",end_date,start_date
+        self.cr.execute("select id from stock_move ai "\
+                   "WHERE (ai.create_date >= %s) AND (ai.create_date <= %s)", (start_date, end_date))
+        stock_move_ids = self.cr.fetchall()
+        print "\n\n===========stock_move_ids=======",stock_move_ids
+        stock_move_obj_list = []
+        for stock_id in stock_move_ids:
+            stock_move_obj = stock_move_pool.browse(self.cr,self.uid,stock_id)
+            origin = stock_move_obj.origin
+            if origin:
+                sale_order_id = sale_order_pool.search(self.cr, self.uid, [('name','=',origin)])
+                print "\n\n===========sale_order_id=======",sale_order_id
+                if sale_order_id:
+                    sale_order_obj = sale_order_pool.browse(self.cr,self.uid,sale_order_id)
+                    sales_person_id = sale_order_obj.user_id.id
+                    print "\n\n===========sale_order_obj=======sales_person",sale_order_obj,sales_person_id,data['user_id'][0]
+                    if sales_person_id:
+                        if sales_person_id == data['user_id'][0]:
+                            self.total_qty += stock_move_obj.product_uom_qty
+                            stock_move_obj_list.append(stock_move_obj)
+        print "\n\n===========stock_move_obj_list==========",stock_move_obj_list    
+        return stock_move_obj_list
+    
+    def get_amount(self,qty,product_price):
+        print "\n\n======qty,product_price==========",qty,product_price
+        amount = qty*product_price
+        self.total_amount += amount
+        print "\n\n=======amount=======",amount
+        return amount
+    
+    def get_creation_date(self,create_date):
+        create_date = str(create_date)
+        date = create_date.split(' ')
+        return date[0]
+    
+    def get_final_total(self):
+        return self.total_amount
+    
+    def get_final_qty(self):
+        return self.total_qty
+    
+    def get_grand_total(self,data):
+        start_date = data['start_date']
+        end_date = data['end_date']
+        print "\n\n==================",end_date,start_date
+        self.cr.execute("select id from account_invoice ai "\
+                   "WHERE (ai.date_invoice >= %s) AND (ai.date_invoice <= %s)", (start_date, end_date))
+        invoice_line_ids = self.cr.fetchall()
+        print "\n\n==========",invoice_line_ids
+        account_invoice_ids_list=[i[0] for i in invoice_line_ids]
+        account_invoice_obj = self.pool.get('account.invoice')
+        res_user_obj = self.pool.get('res.users')
+        res_user_ids = res_user_obj.search(self.cr, self.uid, [])
+        account_invoice_ids = account_invoice_obj.search(self.cr, self.uid, [('type','=','out_invoice'),('user_id','=',data['user_id'][0])])
+        final_list = []
+        for val in account_invoice_ids:
+            if val in account_invoice_ids_list:
+                final_list.append(val)
+        obj_list =[]
+        for ids in final_list:
+            obj_list.append(account_invoice_obj.browse(self.cr, self.uid, ids ))
+            self.grand_total += account_invoice_obj.browse(self.cr, self.uid, ids ).amount_total
+            print "\n\n===========self.grand_total" ,self.grand_total
+        print "\n\n=================obj===========",obj_list
+        return self.grand_total
+    
+    def get_grand_total1(self,data):
+        start_date = data['start_date']
+        end_date = data['end_date']
+        print "\n\n==================",end_date,start_date
+        self.cr.execute("select id from account_invoice ai "\
+                   "WHERE (ai.date_invoice >= %s) AND (ai.date_invoice <= %s)", (start_date, end_date))
+        invoice_line_ids = self.cr.fetchall()
+        print "\n\n==========",invoice_line_ids
+        account_invoice_ids_list=[i[0] for i in invoice_line_ids]
+        account_invoice_obj = self.pool.get('account.invoice')
+        res_user_obj = self.pool.get('res.users')
+        res_user_ids = res_user_obj.search(self.cr, self.uid, [])
+        account_invoice_ids = account_invoice_obj.search(self.cr, self.uid, [('type','=','out_invoice'),('user_id','=',data['user_id'][0])])
+        final_list = []
+        for val in account_invoice_ids:
+            if val in account_invoice_ids_list:
+                final_list.append(val)
+        obj_list =[]
+        for ids in final_list:
+            obj_list.append(account_invoice_obj.browse(self.cr, self.uid, ids ))
+            self.grand_total1 += account_invoice_obj.browse(self.cr, self.uid, ids ).amount_total
+            print "\n\n===========self.grand_total" ,self.grand_total
+        print "\n\n=================obj===========",obj_list
+        return self.grand_total1
+
+
+    def get_index(self):
+        self.index += 1
+        return self.index
+    
+    def get_invoice_ids(self,data):
+        start_date = data['start_date']
+        end_date = data['end_date']
+        print "\n\n==================",end_date,start_date
+        self.cr.execute("select id from account_invoice ai "\
+                   "WHERE (ai.date_invoice >= %s) AND (ai.date_invoice <= %s)", (start_date, end_date))
+        invoice_line_ids = self.cr.fetchall()
+        print "\n\n==========",invoice_line_ids
+        account_invoice_ids_list=[i[0] for i in invoice_line_ids]
+        account_invoice_obj = self.pool.get('account.invoice')
+        res_user_obj = self.pool.get('res.users')
+        res_user_ids = res_user_obj.search(self.cr, self.uid, [])
+        account_invoice_ids = account_invoice_obj.search(self.cr, self.uid, [('type','=','out_invoice'),('user_id','=',data['user_id'][0])])
+        final_list = []
+        for val in account_invoice_ids:
+            if val in account_invoice_ids_list:
+                final_list.append(val)
+        obj_list =[]
+        for ids in final_list:
+            obj_list.append(account_invoice_obj.browse(self.cr, self.uid, ids ))
+            self.grand_total += account_invoice_obj.browse(self.cr, self.uid, ids ).amount_total
+            print "\n\n===========self.grand_total" ,self.grand_total
+        print "\n\n=================obj===========",obj_list
+        return obj_list
+
+
+class test_report_template_id(osv.AbstractModel):
+    _name = 'report.stock_out_qweb_report.stock_out_report_template_id'
+    _inherit = 'report.abstract_report'
+    _template = 'stock_out_qweb_report.stock_out_report_template_id'
+    _wrapped_report_class = stock_out_report
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

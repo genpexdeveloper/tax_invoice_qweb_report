@@ -1,0 +1,72 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2014-Today BrowseInfo (<http://genpex.com/>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+import time
+from openerp.osv import osv
+from openerp.tools.translate import _
+from openerp.report import report_sxw
+#from elaphe.upc import UpcA
+from datetime import datetime
+from openerp.modules.module import get_module_resource
+
+
+class journal_entry_report(report_sxw.rml_parse):
+
+
+    def __init__(self, cr, uid, name, context=None):
+        super(journal_entry_report, self).__init__(cr, uid, name, context=context)
+        self.grand_total1 =0
+        self.total_debit = 0.0
+        self.total_credit = 0.0
+        self.localcontext.update({
+            'time': time,
+            'get_debit_total':self.get_debit_total,
+            'get_credit_total':self.get_credit_total,
+            'get_to_review':self.get_to_review,
+            })
+    
+    def get_to_review(self,to_check):
+        if to_check:
+            return "Yes"
+        else:
+            return "No"
+    
+    def get_debit_total(self,line_id):
+        if line_id:
+            for line in line_id:
+                self.total_debit += line.debit
+        return self.total_debit 
+
+    def get_credit_total(self,line_id):
+        
+        if line_id:
+            for line in line_id:
+                self.total_credit += line.credit
+        return self.total_credit
+
+
+class test_report_template_id(osv.AbstractModel):
+    _name = 'report.journal_entry_qweb_report.journal_entry_report_template_id'
+    _inherit = 'report.abstract_report'
+    _template = 'journal_entry_qweb_report.journal_entry_report_template_id'
+    _wrapped_report_class =journal_entry_report
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

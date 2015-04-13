@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="journal_entry_report_template_id">
+			<t t-call="report.external_layout">
+				<div class="page">
+					<h3 style="border-bottom:2px solid black;">
+						<span><strong>Journal Entry Report</strong></span>
+					</h3>
+				</div>
+			</t>
+		</template>
+	</data>
+</openerp>

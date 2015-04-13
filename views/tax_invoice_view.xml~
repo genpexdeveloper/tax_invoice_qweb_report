@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="tax_invoice_report_template_id">
+			<t t-foreach="docs" t-as="o">
+				<t t-call="report.custom_external_layout">
+					<div class="page">
+						<div class="col-xs-12 pull-left" style="border-bottom:1px solid black;">
+							<div class="col-xs-4 pull-left">
+								<p><font style="color:white">.</font></p>
+								<p><font style="color:white">...</font></p>
+								<img  t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128',o.number, 200, 100)" style="width:250px;height:50px;"/>
+							</div>
+							<div class="col-xs-4 pull-left" style="border-right:1px solid black;">
+								<p><strong>CASH ON DELIVERY</strong></p>
+								<p style="font-size:12px; height:8px;">
+									<strong>Amount to be Paid: <span t-field="o.amount_untaxed"/> <span t-field="o.company_id.currency_id.symbol"/></strong>
+								</p>
+								<p style="font-size:9px; height:12px;">(Price is inclusive of all taxes)</p>
+								<p style="font-size:12px; height:8px;">
+									<strong>Order No.: <span t-if="o.origin" t-field="o.origin"/></strong>
+								</p>
+								<p style="font-size:10px; height:12px;"><span t-esc="get_order_date(o.origin)"/></p>
+								<p style="font-size:12px; height:8px;">
+									<strong>Invoice No.: <span t-if="o.number" t-field="o.number"/></strong>
+								</p>
+								<p style="font-size:10px; height:8px;"><span t-esc="get_invoice_date(o.date_invoice)"/></p>
+								<p style="font-size:12px; height:14px;">
+									<strong>Shipment No.: <span t-esc="get_shipment_no(o.origin)"/></strong>
+								</p>
+							</div>
+							<div class="col-xs-4 pull-right">
+								<p><strong>SHIP TO</strong>
+									-/<span t-if="o.partner_id.city" t-field="o.partner_id.city"/>
+									(<span t-if="o.partner_id.zip" t-field="o.partner_id.zip"/>)
+								</p>
+								<p style="font-size:12px; height:8px;"><strong><span t-field="o.partner_id.name"/></strong></p>
+								<p style="font-size:12px; height:8px;"><span t-if="o.partner_id.street" t-field="o.partner_id.street"/></p>
+								<p style="font-size:12px; height:8px;"><span t-if="o.partner_id.street2" t-field="o.partner_id.street2"/></p>
+								<p style="font-size:12px; height:8px;">
+									<span t-if="o.partner_id.city" t-field="o.partner_id.city"/>,
+									<span t-if="o.partner_id.zip" t-field="o.partner_id.zip"/>
+								</p>
+								<p style="font-size:12px; height:8px;">
+									<span t-if="o.partner_id.state_id" t-field="o.partner_id.state_id.name"/>,
+									<span t-if="o.partner_id.country_id" t-field="o.partner_id.country_id.code"/>
+								</p>
+								<p style="font-size:12px; height:8px;">
+									<strong>Phone: <span t-if="o.partner_id.phone" t-field="o.partner_id.phone"/>,
+									<span t-if="o.partner_id.mobile" t-field="o.partner_id.mobile"/></strong>
+								</p>
+							</div>
+						</div>
+						<div class="col-xs-12 pull-left">
+							<p style="height:20px;"><font style="color:white;">.</font></p>
+							<p style="height:8px;"><center><span style="font-weight:bold;"><u>Invoice Details</u></span></center></p>
+							<p><center><span style="font-weight:bold;">Note: </span> <span>This shipment contains following items</span></center></p>
+						</div>
+						<div class="col-xs-12 pull-left" style="border-bottom:1px solid black;border-top:1px solid black;">
+							<table class="table table-condensed">
+								<thead>
+								    <tr>
+								    	<th>No</th>
+								        <th>Product</th>
+								        <th class="text-right">Quantity</th>
+								        <th class="text-right">Unit Price</th>
+								        <th class="text-right">Taxes</th>
+								        <th class="text-right" groups="sale.group_discount_per_so_line">Discount(%)</th>
+								        <th class="text-right">Price</th>
+								    </tr>
+							   	</thead>
+							   	<tbody class="sale_tbody">
+								    <tr t-foreach="o.invoice_line" t-as="l">
+								        <td>
+								           <span t-esc="get_index()"/>
+								        </td>
+								        <td>
+								           <span t-field="l.name"/>
+								        </td>
+								        <td class="text-right">
+								            <span t-field="l.quantity"/>
+								        </td>
+								        <td class="text-right">
+								            <span t-field="l.price_unit"/> <span t-field="o.company_id.currency_id.symbol"/>
+								        </td>
+								        <td class="text-right">
+								            <span t-esc="get_taxes(l)"/> <span t-field="o.company_id.currency_id.symbol"/>
+								        </td>
+								        <td class="text-right" groups="sale.group_discount_per_so_line">
+								            <span t-esc="get_discount(l)"/> <span t-field="o.company_id.currency_id.symbol"/>
+								        </td>
+								        <td class="text-right">
+								            <span t-field="l.price_subtotal"/> <span t-field="o.company_id.currency_id.symbol"/> 
+								        </td>
+								    </tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-xs-4 pull-right">
+					        <table class="table table-condensed">
+					            <tr class="border-black">
+					                <td><strong>Shipment Value</strong></td>
+					                <td class="text-right">
+					                    <span t-field="o.amount_untaxed"
+					                        t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+					                </td>
+					            </tr>
+					            <tr>
+					                <td><strong>Discount</strong></td>
+					                <td class="text-right">
+					                    <span t-esc="get_final_discount()"/>
+					                    <span t-field="o.company_id.currency_id.symbol"/>
+					                </td>
+					            </tr>
+					            <tr>
+					                <td><strong>Taxes</strong></td>
+					                <td class="text-right">
+					                    <span t-field="o.amount_tax"
+					                        t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+					                </td>
+					            </tr>
+					            <tr class="border-black" style="border-bottom:1px solid black;">
+					                <td><strong>Amount to be paid</strong></td>
+					                <td class="text-right">
+					                    <span t-field="o.amount_total"
+					                        t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+					                </td>
+					            </tr>
+					        </table>
+					    </div>
+					    <div class="col-xs-12 pull-left">
+					    	<p style="font-size:12px;">If you have any questions, you can write to us at  <strong><font color="blue"><u>support@stylanzo.com.</u></font></strong>  Mention your order number in your request if applicable.</p>
+					    </div>
+					</div>
+				</t>
+			</t>
+		</template>
+	</data>
+</openerp>

@@ -1,0 +1,48 @@
+.custom_footer {
+    height: 900px;
+    width:120%;
+    padding-bottom:400px;
+}
+.wl{
+	border-right:3px solid #FFFFFF;
+	width:33%;
+	background:#3371b7;
+	text-align: center;
+	color: #FFFFFF;
+}
+.wl1{
+	width:33%;
+	background:#3371b7;
+	text-align: center;
+	color: #FFFFFF;
+}
+.wls{
+	width:30%;
+	text-align: center;
+}
+.address{
+	width:100%;
+	background:#3371b7;
+	text-align: right;
+	color: #FFFFFF;
+}
+.tab{
+	border-right:3px solid #FFFFFF;
+	width:28%;
+	background:#3371b7;
+	text-align: center;
+	color: #FFFFFF;
+}
+.tab1{
+	border-right:3px solid #FFFFFF;
+	width:12%;
+	background:#3371b7;
+	text-align: center;
+	color: #FFFFFF;
+}
+.tab2{
+	width:12%;
+	background:#3371b7;
+	text-align: center;
+	color: #FFFFFF;
+}

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<template id="journal_entry_report_template_id">
+			<t t-foreach="docs" t-as="o">
+				<t t-call="report.external_layout">
+					<div class="page">
+						<h3><span><strong><center>Journal Entry Report</center></strong></span></h3>
+						<h5>
+							<span><strong>Code :</strong></span>
+							<span style="font-weight: bold;" t-field="o.name"></span>
+						</h5>
+						<h5>
+							<span>Journal :</span>
+							<span t-field="o.journal_id.name"></span>
+						</h5>
+						<h5>
+							<span>Period :</span>
+							<span t-field="o.period_id.name"></span>
+						</h5>
+						<h5>
+							<span>Reference :</span>
+							<span t-field="o.ref"></span>
+						</h5>
+						<h5>
+							<span>Date :</span>
+							<span t-field="o.date"></span>
+						</h5>
+						<h5>
+							<span>To Review :</span>
+							<span t-esc="get_to_review(o.to_check)"></span>
+						</h5>
+						<table class="table table-condensed" >
+							<thead style="border:1px solid black;">
+								<tr>
+								    <th style="border:1px solid black;">Invoice</th>
+								    <th style="border:1px solid black;">Name</th>
+									<th style="border:1px solid black;">Partner</th>
+								    <th style="border:1px solid black;">Account</th>
+								    <th style="border:1px solid black;">Due Date</th>
+								    <th style="border:1px solid black;">Debit</th>
+								    <th style="border:1px solid black;">Credit</th>
+								    <th style="border:1px solid black;">Analytic Account</th>
+								    <th style="border:1px solid black;">Amount Currency</th>
+								    <th style="border:1px solid black;">Currency</th>
+									<th style="border:1px solid black;">Tax Account</th>
+								    <th style="border:1px solid black;">Tax Amount</th>
+								    <th style="border:1px solid black;">Status</th>
+								    <th style="border:1px solid black;">Reconcile</th>
+								    <th style="border:1px solid black;">Parcial Reconcile</th>
+								    
+								</tr>
+							</thead>
+							<tbody class="invoice_tbody">
+								<tr t-foreach="o.line_id" t-as="l">
+									<td style="border:1px solid black;"><span t-field="l.invoice"/></td>
+									<td style="border:1px solid black;"><span t-field="l.name"/></td>
+									<td style="border:1px solid black;"><span t-field="l.partner_id.name"/></td>
+									<td style="border:1px solid black;"><span t-field="l.account_id.name"/></td>
+									<td style="border:1px solid black;"><span t-field="l.date_maturity"/></td>
+									<td style="border:1px solid black;"><span t-field="l.debit"/></td>
+									<td style="border:1px solid black;"><span t-field="l.credit"/></td>
+									<td style="border:1px solid black;"><span t-field="l.analytic_account_id.name"/></td>
+									<td style="border:1px solid black;"><span t-field="l.amount_currency"/></td>
+									<td style="border:1px solid black;"><span t-field="l.currency_id.name"/></td>
+									<td style="border:1px solid black;"><span t-field="l.tax_code_id.name"/></td>
+									<td style="border:1px solid black;"><span t-field="l.tax_amount"/></td>
+									<td style="border:1px solid black;"><span t-field="l.state"/></td>
+									<td style="border:1px solid black;"><span t-field="l.reconcile_id.name"/></td>
+									<td style="border:1px solid black;"><span t-field="l.reconcile_partial_id.name"/></td>
+							    </tr>
+							    <tr>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"><strong><span t-esc="get_debit_total(o.line_id)"></span></strong></td>
+									<td style="border:1px solid black;"><strong><span t-esc="get_credit_total(o.line_id)"></span></strong></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+									<td style="border:1px solid black;"></td>
+								</tr>
+							</tbody>
+						</table>
+						<div><span style="color:white;">.</span></div>
+						<div><span style="color:white;">.</span></div>
+						<div><span style="color:white;">.</span></div>
+						<div><span style="color:white;">.</span></div>
+						<div><span style="color:white;">.</span></div>
+						<div class="row">
+						    <div class="col-xs-4 pull-right">
+						        <table class="table table-condensed">
+						            <tr class="border-black">
+						                <td class="text-center" style="font-size:16px; border-top:1px solid black;"><strong>Signature CEO &amp; Accountant</strong></td>
+						            </tr>
+						        </table>
+						    </div>
+						</div>
+						<!--p witdth="30" style="font-size:16px; height:50px; border-bottom:1px solid black; text-align:right;"></p-->
+					</div>
+				</t>
+			</t>
+		</template>
+		<!--template id="report_invoice">
+			<t t-call="report.html_container">
+				<t t-foreach="doc_ids" t-as="doc_id">
+				    <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'journal_entry_qweb_report.journal_entry_report_template_id')"/>
+				</t>
+			</t>
+		</template-->
+	</data>
+</openerp>
