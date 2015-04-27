@@ -49,11 +49,14 @@ class tax_invoice_report(report_sxw.rml_parse):
             })
 
     def get_taxes(self,invoice_line):
-        for tax in invoice_line.invoice_line_tax_id:
-            tax_ratio = tax.amount
-            tax_amount = invoice_line.price_subtotal * tax_ratio
-            self.total_tax_amount += tax_amount
-            return tax_amount
+        if invoice_line.invoice_line_tax_id:
+            for tax in invoice_line.invoice_line_tax_id:
+                tax_ratio = tax.amount
+                tax_amount = invoice_line.price_subtotal * tax_ratio
+                self.total_tax_amount += tax_amount
+                return tax_amount
+        else:
+            return '0.0'
             
     def get_discount(self,line):
         print "\n\n=====",line.discount

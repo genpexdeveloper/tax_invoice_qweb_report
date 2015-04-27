@@ -81,16 +81,16 @@
 								            <span t-field="l.quantity"/>
 								        </td>
 								        <td class="text-right">
-								            <span t-field="l.price_unit"/> <span t-field="o.company_id.currency_id.symbol"/>
+								            <span t-field="l.price_unit"/> <span>₹</span>
 								        </td>
 								        <td class="text-right">
-								            <span t-esc="get_taxes(l)"/> <span t-field="o.company_id.currency_id.symbol"/>
+								            <span t-esc="get_taxes(l)"/> <span>₹</span>
 								        </td>
 								        <td class="text-right" groups="sale.group_discount_per_so_line">
-								            <span t-esc="get_discount(l)"/> <span t-field="o.company_id.currency_id.symbol"/>
+								            <span t-esc="get_discount(l)"/> <span>₹</span>
 								        </td>
 								        <td class="text-right">
-								            <span t-field="l.price_subtotal"/> <span t-field="o.company_id.currency_id.symbol"/> 
+								            <span t-field="l.price_subtotal"/> <span>₹</span> 
 								        </td>
 								    </tr>
 								</tbody>
@@ -101,29 +101,26 @@
 					            <tr class="border-black">
 					                <td><strong>Shipment Value</strong></td>
 					                <td class="text-right">
-					                    <span t-field="o.amount_untaxed"
-					                        t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+					                    <span t-field="o.amount_untaxed"/> <span>₹</span>
 					                </td>
 					            </tr>
 					            <tr>
 					                <td><strong>Discount</strong></td>
 					                <td class="text-right">
 					                    <span t-esc="get_final_discount()"/>
-					                    <span t-field="o.company_id.currency_id.symbol"/>
+					                    <span>₹</span>
 					                </td>
 					            </tr>
 					            <tr>
 					                <td><strong>Taxes</strong></td>
 					                <td class="text-right">
-					                    <span t-field="o.amount_tax"
-					                        t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+					                    <span t-field="o.amount_tax"/> <span>₹</span>
 					                </td>
 					            </tr>
 					            <tr class="border-black" style="border-bottom:1px solid black;">
 					                <td><strong>Amount to be paid</strong></td>
 					                <td class="text-right">
-					                    <span t-field="o.amount_total"
-					                        t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+					                    <span t-field="o.amount_total"/> <span>₹</span>
 					                </td>
 					            </tr>
 					        </table>
