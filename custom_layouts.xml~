@@ -65,10 +65,19 @@
     		</div>
     		<div class="col-xs-3 pull-left">
     			<p style="height:4px;"><font style="color:white">.</font></p>
-    			<p style="height:10px;" t-field="company.partner_id"
-                		t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
-                <p style="font-size:12px; height:10px;">TEL.: <span t-if="company.phone" t-field="company.phone"></span></p>
-                <p style="font-size:12px;"><strong>TIN No.: <span t-if="company.vat" t-field="company.vat"></span></strong></p>
+    			<!--p style="height:10px;" t-field="company.partner_id"
+                		t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/-->
+                <p style="font-size:10px; height:5px;"><span t-if="company.partner_id.street" t-field="company.partner_id.street"></span></p>
+                <p style="font-size:10px; height:5px;"><span t-if="company.partner_id.street2" t-field="company.partner_id.street2"></span></p>
+                <p style="font-size:10px; height:5px;">
+                	<span t-if="company.partner_id.city" t-field="company.partner_id.city"></span>
+                	<span t-if="company.partner_id.zip" t-field="company.partner_id.zip"></span>
+                </p>
+                <p style="font-size:10px; height:5px;">
+                	<span t-if="company.partner_id.country_id" t-field="company.partner_id.country_id.name"></span>
+                </p>
+                <p style="font-size:10px; height:5px;">TEL.: <span t-if="company.phone" t-field="company.phone"></span></p>
+                <p style="font-size:10px;"><strong>TIN No.: <span t-if="company.vat" t-field="company.vat"></span></strong></p>
     		</div>
     		<div class="col-xs-3 pull-left">
     			<center><strong><span style="font-size:12px;">TAX INVOICE</span></strong></center>
@@ -113,7 +122,7 @@
     	<div class="custom_footer">
             <div class="row mt32 mb32">
 		    	<div style="border-top: 1px solid black;">
-		            	<p><font style="color:white;">....................................................</font>100% Original Products | Free Shipping | 24 Hours Dispatch | Cash On Delivery | 30 Day Return<font style="color:white;">.............</font>Page <span class="page"/> of <span class="topage"/></p>
+		            	<p><font style="color:white;">....................................................</font>100% Original Products | Free Shipping | 24 Hours Dispatch | Cash On Delivery | 7 Days Return<font style="color:white;">.............</font>Page <span class="page"/> of <span class="topage"/></p>
 		        </div>
 		        
 	        </div>
