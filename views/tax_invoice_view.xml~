@@ -65,7 +65,6 @@
 								        <th class="text-right">Quantity</th>
 								        <th class="text-right">Unit Price</th>
 								        <th class="text-right">Taxes</th>
-								        <th class="text-right" groups="sale.group_discount_per_so_line">Discount(%)</th>
 								        <th class="text-right">Price</th>
 								    </tr>
 							   	</thead>
@@ -86,9 +85,6 @@
 								        <td class="text-right">
 								            <span>Rs.</span> <span t-esc="get_taxes(l)"/>
 								        </td>
-								        <td class="text-right" groups="sale.group_discount_per_so_line">
-								            <span>Rs.</span> <span t-esc="get_discount(l)"/>
-								        </td>
 								        <td class="text-right">
 								            <span>Rs.</span> <span t-field="l.price_subtotal"/> 
 								        </td>
@@ -101,13 +97,13 @@
 					            <tr class="border-black">
 					                <td><strong>Shipment Value</strong></td>
 					                <td class="text-right">
-					                    <span>Rs.</span> <span t-field="o.amount_untaxed"/>
+					                    <span>Rs.</span> <span t-esc="get_amount_untaxed()"/>
 					                </td>
 					            </tr>
 					            <tr>
 					                <td><strong>Discount</strong></td>
 					                <td class="text-right">
-					                    <span>Rs.</span> <span t-esc="get_final_discount()"/>
+					                    <span>Rs.</span> <span t-esc="get_final_discount(o.invoice_line)"/>
 					                </td>
 					            </tr>
 					            <tr>

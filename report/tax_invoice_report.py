@@ -37,7 +37,7 @@ class tax_invoice_report(report_sxw.rml_parse):
         self.index = 0
         self.total_tax_amount = 0
         self.total_discount = 0
-        self.sub_total = 0
+        self.amount_untaxed = 0
         self.localcontext.update({
             'time': time,
             'get_order_date':self.get_order_date,
@@ -45,9 +45,10 @@ class tax_invoice_report(report_sxw.rml_parse):
             'get_shipment_no':self.get_shipment_no,
             'get_index':self.get_index,
             'get_taxes':self.get_taxes,
-            'get_discount':self.get_discount,
+            #'get_discount':self.get_discount,
             'get_final_discount':self.get_final_discount,
             'get_product_line':self.get_product_line,
+            'get_amount_untaxed':self.get_amount_untaxed,
             })
 
     def get_product_line(self,invoice_line):
@@ -55,11 +56,13 @@ class tax_invoice_report(report_sxw.rml_parse):
         for line in invoice_line:
             if line.product_id.product_tmpl_id.name !='Discount':
                 print "\n\n======",line.product_id.product_tmpl_id.name
-                self.sub_total += line.price_subtotal
+                self.amount_untaxed += line.price_subtotal
                 invoice_line_list.append(line)
         print "invoice_line_list=======",invoice_line_list
         return invoice_line_list
                 
+    def get_amount_untaxed(self):
+        return self.amount_untaxed
     
     def get_taxes(self,invoice_line):
         if invoice_line.invoice_line_tax_id:
@@ -71,15 +74,19 @@ class tax_invoice_report(report_sxw.rml_parse):
         else:
             return '0.0'
             
-    def get_discount(self,line):
-        print "\n\n=====",line.discount
-        discount_amount = ((line.price_unit * line.discount)/100)
-        print "\n\n======Tax amount=====",discount_amount
-        self.total_discount += discount_amount
-        return discount_amount
+#    def get_discount(self,line):
+#        print "\n\n=====",line.discount
+#        discount_amount = ((line.price_unit * line.discount)/100)
+#        print "\n\n======Tax amount=====",discount_amount
+#        self.total_discount += discount_amount
+#        return discount_amount
 
-    def get_final_discount(self):
-        return self.total_discount
+    def get_final_discount(self,invoice_line):
+        total_discount = 0
+        for line in invoice_line:
+            if line.product_id.product_tmpl_id.name =='Discount':
+                total_discount += line.price_unit
+        return total_discount
 
     def get_index(self):
         self.index += 1
