@@ -51,11 +51,15 @@ class tax_invoice_report(report_sxw.rml_parse):
             })
 
     def get_product_line(self,invoice_line):
-        obj_list = []
-        if invoice_line.product_id.product_tmpl_id.name !='Discount':
-           self.sub_total += invoice_line.price_subtotal
-           return invoice_line
-            
+        invoice_line_list = []
+        for line in invoice_line:
+            if line.product_id.product_tmpl_id.name !='Discount':
+                print "\n\n======",line.product_id.product_tmpl_id.name
+                self.sub_total += line.price_subtotal
+                invoice_line_list.append(line)
+        print "invoice_line_list=======",invoice_line_list
+        return invoice_line_list
+                
     
     def get_taxes(self,invoice_line):
         if invoice_line.invoice_line_tax_id:
