@@ -70,7 +70,7 @@
 								    </tr>
 							   	</thead>
 							   	<tbody class="sale_tbody">
-								    <tr t-foreach="o.invoice_line" t-as="l">
+								    <tr t-foreach="get_product_line(o.invoice_line)" t-as="l">
 								        <td>
 								           <span t-esc="get_index()"/>
 								        </td>

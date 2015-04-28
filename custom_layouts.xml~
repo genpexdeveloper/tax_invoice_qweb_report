@@ -64,25 +64,26 @@
     			<img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="width:150px;height:150px;"/>
     		</div>
     		<div class="col-xs-3 pull-left">
-    			<p style="height:5px;"><font style="color:white">.</font></p>
-    			<p style="height:5px;"><font style="color:white">.</font></p>
+    			<p style="height:3px;"><font style="color:white">.</font></p>
+    			<p style="height:3px;"><font style="color:white">.</font></p>
+    			<p style="height:3px;"><font style="color:white">.</font></p>
     			<!--p style="height:10px;" t-field="company.partner_id"
                 		t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/-->
                 <p style="font-size:10px; height:5px;">
-                	<font style="color:white">.</font><span t-if="company.partner_id.street" t-field="company.partner_id.street"></span>
+                	<font style="color:white">..</font><span t-if="company.partner_id.street" t-field="company.partner_id.street"></span>
                 </p>
                 <p style="font-size:10px; height:5px;">
-                	<font style="color:white">.</font><span t-if="company.partner_id.street2" t-field="company.partner_id.street2"></span>
+                	<font style="color:white">..</font><span t-if="company.partner_id.street2" t-field="company.partner_id.street2"></span>
                 </p>
                 <p style="font-size:10px; height:5px;">
-                	<font style="color:white">.</font><span t-if="company.partner_id.city" t-field="company.partner_id.city"></span>
+                	<font style="color:white">..</font><span t-if="company.partner_id.city" t-field="company.partner_id.city"></span>
                 	<span t-if="company.partner_id.zip" t-field="company.partner_id.zip"></span>
                 </p>
                 <p style="font-size:10px; height:5px;">
-                	<font style="color:white">.</font><span t-if="company.partner_id.country_id" t-field="company.partner_id.country_id.name"></span>
+                	<font style="color:white">..</font><span t-if="company.partner_id.country_id" t-field="company.partner_id.country_id.name"></span>
                 </p>
-                <p style="font-size:10px; height:5px;"><font style="color:white">.</font>TEL.: <span t-if="company.phone" t-field="company.phone"></span></p>
-                <p style="font-size:10px;"><strong><font style="color:white">.</font>TIN No.: <span t-if="company.vat" t-field="company.vat"></span></strong></p>
+                <p style="font-size:10px; height:5px;"><font style="color:white">..</font>TEL.: <span t-if="company.phone" t-field="company.phone"></span></p>
+                <p style="font-size:10px;"><strong><font style="color:white">..</font>TIN No.: <span t-if="company.vat" t-field="company.vat"></span></strong></p>
     		</div>
     		<div class="col-xs-3 pull-left">
     			<center><strong><span style="font-size:12px;">TAX INVOICE</span></strong></center>

@@ -37,6 +37,7 @@ class tax_invoice_report(report_sxw.rml_parse):
         self.index = 0
         self.total_tax_amount = 0
         self.total_discount = 0
+        self.sub_total = 0
         self.localcontext.update({
             'time': time,
             'get_order_date':self.get_order_date,
@@ -46,8 +47,16 @@ class tax_invoice_report(report_sxw.rml_parse):
             'get_taxes':self.get_taxes,
             'get_discount':self.get_discount,
             'get_final_discount':self.get_final_discount,
+            'get_product_line':self.get_product_line,
             })
 
+    def get_product_line(self,invoice_line):
+        obj_list = []
+        if invoice_line.product_id.product_tmpl_id.name !='Discount':
+           self.sub_total += invoice_line.price_subtotal
+           return invoice_line
+            
+    
     def get_taxes(self,invoice_line):
         if invoice_line.invoice_line_tax_id:
             for tax in invoice_line.invoice_line_tax_id:
