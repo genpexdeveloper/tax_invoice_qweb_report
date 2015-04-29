@@ -49,15 +49,19 @@ class tax_invoice_report(report_sxw.rml_parse):
             'get_final_discount':self.get_final_discount,
             'get_product_line':self.get_product_line,
             'get_amount_untaxed':self.get_amount_untaxed,
+            'get_credit':self.get_credit,
+            'get_shipping':self.get_shipping,
             })
 
     def get_product_line(self,invoice_line):
         invoice_line_list = []
         for line in invoice_line:
             if line.product_id.product_tmpl_id.name !='Discount':
-                print "\n\n======",line.product_id.product_tmpl_id.name
-                self.amount_untaxed += line.price_subtotal
-                invoice_line_list.append(line)
+                if line.product_id.product_tmpl_id.name !='Shipping':
+                    if line.product_id.product_tmpl_id.name !='Credit':
+                        print "\n\n======",line.product_id.product_tmpl_id.name
+                        self.amount_untaxed += line.price_subtotal
+                        invoice_line_list.append(line)
         print "invoice_line_list=======",invoice_line_list
         return invoice_line_list
                 
@@ -87,6 +91,21 @@ class tax_invoice_report(report_sxw.rml_parse):
             if line.product_id.product_tmpl_id.name =='Discount':
                 total_discount += line.price_unit
         return total_discount
+
+    def get_credit(self,invoice_line):
+        total_credit = 0
+        for line in invoice_line:
+            if line.product_id.product_tmpl_id.name =='Credit':
+                total_credit += line.price_unit
+        return total_credit
+
+    def get_shipping(self,invoice_line):
+        total_shipping = 0
+        for line in invoice_line:
+            if line.product_id.product_tmpl_id.name =='Shipping':
+                total_shipping += line.price_unit
+        return total_shipping
+
 
     def get_index(self):
         self.index += 1
