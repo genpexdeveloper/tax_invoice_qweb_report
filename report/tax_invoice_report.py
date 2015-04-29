@@ -29,6 +29,7 @@ from os.path import join
 from openerp.modules.module import get_module_resource
 
 
+
 class tax_invoice_report(report_sxw.rml_parse):
 
 

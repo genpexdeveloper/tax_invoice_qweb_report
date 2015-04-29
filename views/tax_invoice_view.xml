@@ -14,11 +14,11 @@
 							<div class="col-xs-4 pull-left" style="border-right:1px solid black;">
 								<p><strong>CASH ON DELIVERY</strong></p>
 								<p style="font-size:10px; height:8px;">
-									<strong>Amount to be Paid: <span>Rs.</span> <span t-field="o.amount_untaxed"/></strong>
+									<strong>Amount to be Paid: <span>Rs.</span> <span t-field="o.amount_total"/></strong>
 								</p>
 								<p style="font-size:9px; height:12px;">(Price is inclusive of all taxes)</p>
 								<p style="font-size:10px; height:8px;">
-									<strong>Order No.: <span t-if="o.origin" t-field="o.origin"/></strong>
+									<strong>Order No.: <span t-if="o.name" t-field="o.name"/></strong>
 								</p>
 								<p style="font-size:10px; height:12px;"><span t-esc="get_order_date(o.origin)"/></p>
 								<p style="font-size:10px; height:8px;">
@@ -28,7 +28,7 @@
 								<p style="font-size:10px; height:8px;">
 									<strong>Shipment No.: <span t-esc="get_shipment_no(o.origin)"/></strong>
 								</p>
-								<p style="font-size:10px; height:14px;">
+								<p style="font-size:8px; height:17px;">
 									<strong><span t-esc="o.comment"/></strong>
 								</p>
 							</div>
@@ -133,7 +133,7 @@
 					                    <span>Rs.</span> <span t-field="o.amount_total"/>
 					                </td>
 					            </tr>
-					            <tr>
+					            <tr t-if="o.amount_total != o.residual">
 					                <td><strong> Balance to be paid</strong></td>
 					                <td class="text-right">
 					                    <span>Rs.</span> <span t-field="o.residual"/>
