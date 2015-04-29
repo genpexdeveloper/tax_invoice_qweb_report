@@ -27,7 +27,7 @@ from openerp.tools.translate import _
 class account_invoice(osv.Model):
      _inherit="account.invoice"
      
-     def invoice_print(self, cr, uid, ids, context=None):
+     def print_tax_invoice(self, cr, uid, ids, context=None):
         '''
         This function prints the invoice and mark it as sent, so that we can see more easily the next step of the workflow
         '''
